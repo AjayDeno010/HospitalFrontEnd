@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        body {
+            background-color: #666666;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .login-container {
+            max-width: 300px;
+            margin: auto;
+            background-color: #333333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .login-container label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            background-color: #333333;
+            color: white;
+            border: 1px solid white;
+            border-radius: 5px;
+        }
+
+        .login-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .register-link {
+            color: white;
+            text-decoration: none;
+            display: block;
+            margin-top: 10px;
+            text-decoration-line: underline;
+        }
+
+        .alert-box {
+            background-color: #0f07ee;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        .nextpage :hover{
+          background-color: #0f07ee;
+        }
+       
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+            <button type="submit" onclick="submitForm()">Submit</button>
+        </form>
+        <div class="nextpage">
+        <a href="/Users/ajays/Documents/Hospital/UserRegistration.html" class="register-link">If you don't have an account, click me!</a>
+        </div>
+    </div>
+
+    <!-- Your HTML code remains the same -->
+
+    <script>
+        function submitForm() {
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+
+    var base64Credentials = btoa(username + ':' + password);
+
+    // Create an object with the username and password
+    var data = {
+        username: username,
+        password: password
+    };
+
+    fetch('http://localhost:8080/api/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + base64Credentials,
+            'Access-Control-Allow-Origin': '*'
+        },
+        // Convert the data object to JSON and include it in the request body
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => { 
+        // if (response.status === 200) {
+                        // Store the response data in session storage
+                        // sessionStorage.setItem('userData', JSON.stringify(data));
+                        console.log('Login successful:', data);
+        
+                         console.log('login successfully:', data);
+                         sessionStorage.setItem('userData', JSON.stringify(data));
+                        window.location.href = '/Users/ajays/Documents/Hospital/AppointmentForm.html';
+
+                    // }
+        // Handle success response
+    })
+    .catch(error => {
+        console.error('Login failed:', error);
+        // Show centered alert for incorrect username and password
+        showAlert('Sorry, incorrect username and password.');
+        // Clear the username and password fields
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        // Handle error response
+    });
+}
+
+
+        function showAlert(message) {
+            var alertBox = document.createElement('div');
+            alertBox.className = 'alert-box';
+            alertBox.innerHTML = '<p>' + message + '</p>';
+            document.body.appendChild(alertBox);
+            setTimeout(function () {
+                document.body.removeChild(alertBox);
+            }, 3000);
+        }
+    </script>
+
+</body>
+
+</html>

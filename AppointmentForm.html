@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #666666;
+            color: white;
+            padding: 20px;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: auto;
+        }
+
+        .form-container form {
+            background-color: #333333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .form-container label {
+            font-weight: bold;
+        }
+    </style>
+    <title>Kavery Hospital Appointment</title>
+</head>
+
+<body>
+    <div class="form-container">
+        <form id="appointmentForm">
+            <h2 class="text-center">Kavery Hospital Appointment</h2>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" class="form-control" id="mobile" placeholder="Enter your mobile number" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" class="form-control" id="location" placeholder="Enter your location" required>
+            </div>
+            <div class="form-group">
+                <label for="specialty">Specialty</label>
+                <input type="text" class="form-control" id="specialty" placeholder="Enter the specialty" required>
+            </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" class="form-control" id="date" required>
+            </div>
+            <div class="form-group">
+                <label for="time">Time</label>
+                <input type="time" class="form-control" id="time" step="1">
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" class="form-control" id="address" placeholder="Enter your address" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea class="form-control" id="message" rows="3" placeholder="Enter your message"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary btn-block" onclick="scheduleAppointment()">Schedule</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+
+    <script>
+       function scheduleAppointment() {
+    //     var userData = JSON.parse(sessionStorage.getItem('userData'));
+    //     console.log('User Data:', userData);
+    // var username = userData.userName;
+    // console.log(username);
+    // var password = userData.password;
+    // console.log(password);
+
+    // Retrieve userId from session storage
+    // var userId = userData.userId;
+
+    // Encode username and password for basic authentication
+    var base64Credentials = btoa(username+':'+password);
+            // Get form data
+            var formData = {
+                patientName: document.getElementById('name').value,
+                appointmentTime: document.getElementById('time').value,
+                appointmentDate: document.getElementById('date').value,
+                location: document.getElementById('location').value,
+                phoneNumber: document.getElementById('mobile').value,
+                address: document.getElementById('address').value,
+                requiredDoctorSpecialisation: document.getElementById('specialty').value,
+                email: document.getElementById('email').value,
+                message: document.getElementById('message').value,
+                userId:userId
+            };
+ 
+            // Encode username and password for basic authentication
+            var base64Credentials = btoa("HelloWorld:HelloWorld");
+ 
+            // Make fetch request with basic authentication header
+            fetch('http://localhost:8080/appointment/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic ' + base64Credentials,
+                    'Access-Control-Allow-Origin': '*'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+           if (response.ok) {
+            return response.json();
+           } else {
+           throw new Error('Failed to schedule appointment');
+           }
+        })
+            .then(data => {
+             console.log('Appointment scheduled successfully:', data);
+              sessionStorage.setItem('doctorData', JSON.stringify(data.availableDoctors));
+             window.location.href = 'AppointmentAlertbox.html';
+            })
+            
+            .catch(error => {
+                console.error('Error scheduling appointment:', error);
+                // Handle error response
+            });
+        }
+        
+    </script>
+</body>
+
+</html>
